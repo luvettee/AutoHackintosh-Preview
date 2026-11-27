@@ -1,0 +1,58 @@
+{
+  "schema": "autohackintosh-pins/1",
+  "checked": "2026-11-27",
+  "note": "Each entry is verified at build time. Values match scripts/fetch_deps.py; change them there first, then here.",
+  "upstream": {
+    "OpenCorePkg": {
+      "version": "1.0.8",
+      "url": "https://github.com/acidanthera/OpenCorePkg/releases/download/1.0.8/OpenCore-1.0.8-RELEASE.zip",
+      "license": "BSD-3-Clause",
+      "use": "bootloader binaries and the matching ocvalidate",
+      "why_pinned": "ocvalidate only validates configs for its own release; a mismatch produces false errors"
+    },
+    "1401": {
+      "version": "v3.1",
+      "url": "https://github.com/nullmoth/1401/releases/download/v3.1/1401-Windows-3.1.0.zip",
+      "license": "PolyForm Noncommercial 1.0.0",
+      "use": "headless rule engine; vendored Hardware Sniffer and OpCore-Simplify",
+      "why_pinned": "its knowledge base (efi_rules.json, known_machines.json) is the compatibility brain",
+      "noncommercial": true
+    },
+    "ACPICA": {
+      "version": "20260408",
+      "url": "https://codeload.github.com/acpica/acpica/tar.gz/refs/tags/20260408",
+      "license": "BSD-3-Clause OR GPL-2.0",
+      "use": "iasl, the ACPI disassembler OpCore-Simplify needs",
+      "why_pinned": "1401 documents that 20251212 segfaults on some DSDTs; 20260408 reads all tested tables",
+      "build": "make iasl",
+      "sha256": "ddc5d3e0f54030e2348484fff681861a161efb4e388e20631209574e7884ad39"
+    },
+    "NullMoth NVIDIA": {
+      "version": "v3.1",
+      "url": "https://github.com/nullmoth/nvidia-macos-driver/releases/download/v3.1/nullmoth-nvidia-3.1.tar.gz",
+      "sha256": "e59b3183c53c9946fd123613bb06536a4a5c587120cb5383e62db6f1f672e4a1",
+      "license": "PolyForm Noncommercial 1.0.0 (kexts, plugin); LGPL-3.0-or-later (translator, based on metal2vulkan); MIT (Mesa/NVK changes)",
+      "use": "Metal driver for Turing-and-newer GeForce cards, installed after macOS boots",
+      "optional": true,
+      "noncommercial": true
+    }
+  },
+  "vendored_inside_1401": {
+    "Hardware-Sniffer": {
+      "commit": "6570f91c33c63f5bf481db31789f903b0d12099f",
+      "license": "BSD-3-Clause",
+      "note": "has a first-class Linux backend (Scripts/platforms/linux.py)"
+    },
+    "OpCore-Simplify": {
+      "commit": "814061d40d6292d7c656c90e7cc715a250db89b6",
+      "license": "BSD-3-Clause",
+      "note": "1401's fork carries fixes its engine depends on; prefer it over upstream"
+    }
+  },
+  "apple_media": {
+    "source": "https://osrecovery.apple.com/",
+    "protocol": "session cookie from /, then POST InstallationPayload/RecoveryImage",
+    "license": "Apple software licence; downloaded by the user from Apple, never redistributed here",
+    "note": "Requests use OpenCore macrecovery board selections. The signed image build must match the requested Darwin major."
+  }
+}
